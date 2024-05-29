@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   firebase_core: ^2.31.1
   firebase_database: ^10.5.6
+  provider: ^6.0.3
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +67,10 @@ flutter:
     - lib/images/delivery.jpg
     - lib/images/reciving.png
     - lib/images/sending.png
+    - lib/images/box.png
+    - lib/images/boxwhite.png
+    - lib/images/1234.png
+    - lib/images/k.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

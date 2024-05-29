@@ -75,9 +75,8 @@ class _UserDataPageState extends State<UserDataPage> {
       ),
       body: Container(
         color: Colors.white,
-        child:Padding(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -110,13 +109,13 @@ class _UserDataPageState extends State<UserDataPage> {
                     _fetchUserData(nameController.text);
                   },
                   child: Text(
-                      '조회하기',
+                    '조회하기',
                     style: TextStyle(
                       color: Colors.white,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey,
+                    backgroundColor: Color(0xFFC1004B),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -128,27 +127,51 @@ class _UserDataPageState extends State<UserDataPage> {
                   ? Center(child: CircularProgressIndicator())
                   : userData.isNotEmpty
                   ? _buildUserData()
-                  : Center(child: Text('데이터가 없습니다.')),
+                  : Center(child: Text('조회되지 않습니다.')),
             ],
           ),
         ),
-
       ),
     );
   }
 
   Widget _buildUserData() {
     final keyMapping = getKeyMapping();
-
     return Expanded(
-      child: ListView(
-        children: userData.entries.map((entry) {
-          String displayKey = keyMapping[entry.key] ?? entry.key;
+      child: ListView.separated(
+        itemCount: userData.length,
+        separatorBuilder: (BuildContext context, int index) => Divider(
+          color: Colors.grey,
+          height: 0.01, // Divider의 높이를 줄여서 간격을 좁힘
+        ),
+        itemBuilder: (BuildContext context, int index) {
+          String key = userData.keys.elementAt(index);
+          String displayKey = keyMapping[key] ?? key;
+          String displayValue = '${userData[key]}';
+
+          // 특정 키에 대해 단위 추가
+          if (key == 'weight') {
+            displayValue += ' kg';
+          } else if (key == 'totalCost') {
+            displayValue += ' 원';
+          } else if (key == 'price') {
+            displayValue += ' 원';
+          } else if (key == 'deliveryTime') {
+            displayValue += ' 일';
+          }
+
           return ListTile(
-            title: Text(displayKey),
-            subtitle: Text('${entry.value}'),
+            title: Text(
+                displayKey,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+            ),
+            subtitle: Text(displayValue),
+            contentPadding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 8.0), // ListTile의 패딩 조정
           );
-        }).toList(),
+        },
       ),
     );
   }

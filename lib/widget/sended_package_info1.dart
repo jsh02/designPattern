@@ -119,7 +119,7 @@ class _SendingPage1State extends State<SendingPage1> {
       height: 50,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: isButtonEnabled ? Colors.grey[200] : Colors.white,
+        color: isButtonEnabled ? Color(0xFFC1004B) : Colors.white,
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextButton(
@@ -140,7 +140,7 @@ class _SendingPage1State extends State<SendingPage1> {
             : null,
         child: Text(
           text,
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
     );

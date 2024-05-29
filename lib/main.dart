@@ -24,11 +24,9 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Container(
         color: Colors.white,
         child: Center(
-
           child: Column(
             children: [
               SizedBox(height: 150),
@@ -50,19 +48,23 @@ class MyHomePage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 200),
+              Container(
+                margin: EdgeInsets.only(top: 40),
+                child:Image.asset(
+                  'lib/images/boxwhite.png',
+                  width: 250,
+                  height: 200,
+                ),
+              ),
+              SizedBox(height: 20),
               Container(
                 width: 300,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.white, // Placeholder color
                 ),
-                margin: EdgeInsets.only(top: 50, bottom: 20),
+                margin: EdgeInsets.only(bottom: 20),
                 child: ListTile(
-                  leading: Image.asset(
-                    'lib/images/sending.png', // 택배 보내기 아이콘 경로
-                    width: 50,
-                  ),
                   title: Text(
                     '택배 보내기',
                     style: TextStyle(
@@ -86,10 +88,7 @@ class MyHomePage extends StatelessWidget {
                   color: Colors.white, // Placeholder color
                 ),
                 child: ListTile(
-                  leading: Image.asset(
-                    'lib/images/reciving.png', // 택배 정보 조회 아이콘 경로
-                    width: 50,
-                  ),
+
                   title: Text(
                     '배송 정보 조회',
                     style: TextStyle(

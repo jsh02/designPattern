@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
 import 'cost_view_page.dart';
-
+import 'decorator.dart';
 
 class SendingPage2 extends StatefulWidget {
   final String senderName;
@@ -24,39 +24,16 @@ class SendingPage2 extends StatefulWidget {
 class _SendingPage2State extends State<SendingPage2> {
   final FirebaseDatabase _database = FirebaseDatabase.instance;
 
-  void _sendPackageDataToFirebase() {
-    String senderKey = widget.senderName.replaceAll(' ', '_').toLowerCase(); // 공백을 밑줄로 치환하고 소문자로 변환
-
-    _database.ref('packages/$senderKey').set({
-      'senderName': widget.senderName,
-      'receiverName': widget.receiverName,
-      'senderRegion': widget.senderRegion,
-      'receiverRegion': widget.receiverRegion,
-      'price': priceController.text,
-      'weight': weightController.text,
-      'deliveryCompany': deliveryCompany,
-      'deliveryInsurance': deliveryInsurance,
-      'deliveryExpress': deliveryExpress,
-      'deliveryRegion': deliveryRegion,
-      'totalCost': getTotalCost(),
-      'deliveryTime': deliveryTime,
-    }).then((_) {
-      print('Package sent successfully!');
-    }).catchError((error) {
-      print('Failed to send package: $error');
-    });
-  }
-
-  String deliveryCompany = '한진';
-  String deliveryInsurance = '유';
-  String deliveryExpress = '일반';
-
-  List<String> domesticCompanies = ['한진', '롯데', '우체국', '로젠'];
-  List<String> internationalCompanies = ['Amazon', 'DHL', 'EMS', 'FedEx'];
-  String deliveryRegion = '국내';
-
   final TextEditingController priceController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
+
+  String deliveryCompany = '한진택배';
+  String deliveryInsurance = '유';
+  String deliveryExpress = '일반';
+  String deliveryRegion = '국내';
+
+  List<String> domesticCompanies = ['한진택배', '롯데택배', '우체국택배', '로젠택배'];
+  List<String> internationalCompanies = ['Amazon', 'DHL', 'EMS', 'FedEx'];
 
   int baseCost = 3000;
   int additionalCost = 0;
@@ -105,6 +82,29 @@ class _SendingPage2State extends State<SendingPage2> {
     return baseCost + additionalCost + weightCost + insuranceCost + expressCost;
   }
 
+  void _sendPackageDataToFirebase() {
+    String senderKey = widget.senderName.replaceAll(' ', '_').toLowerCase(); // 공백을 밑줄로 치환하고 소문자로 변환
+
+    _database.ref('packages/$senderKey').set({
+      'senderName': widget.senderName,
+      'receiverName': widget.receiverName,
+      'senderRegion': widget.senderRegion,
+      'receiverRegion': widget.receiverRegion,
+      'price': priceController.text,
+      'weight': weightController.text,
+      'deliveryCompany': deliveryCompany,
+      'deliveryInsurance': deliveryInsurance,
+      'deliveryExpress': deliveryExpress,
+      'deliveryRegion': deliveryRegion,
+      'totalCost': getTotalCost(),
+      'deliveryTime': deliveryTime,
+    }).then((_) {
+      print('Package sent successfully!');
+    }).catchError((error) {
+      print('Failed to send package: $error');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,9 +143,15 @@ class _SendingPage2State extends State<SendingPage2> {
                   ),
                 ),
                 SizedBox(height: 40),
-                _buildSizedTextField('물품의 가격 (원)', priceController),
+                TextFieldDecorator(
+                  controller: priceController,
+                  hintText: '물품의 가격 (원)',
+                ),
                 SizedBox(height: 20),
-                _buildSizedTextField('물품의 무게 (kg)', weightController),
+                TextFieldDecorator(
+                  controller: weightController,
+                  hintText: '물품의 무게 (kg)',
+                ),
                 SizedBox(height: 40),
                 Divider(color: Colors.grey),
                 _buildDropdown('국내/외 배송', deliveryRegion, <String>['국내', '해외'], (newValue) {
@@ -175,36 +181,30 @@ class _SendingPage2State extends State<SendingPage2> {
                 }),
                 Divider(color: Colors.grey),
                 SizedBox(height: 20),
-                Text('예상 운임 비용 : ${getTotalCost()}  원'),
-                Text('예상 배달 시간 : $deliveryTime 일'),
-                SizedBox(height: 80),
+                Center(
+                  child:Text(
+                    '예상 운임 비용 : ${getTotalCost()}원',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+                Center(
+                  child:Text(
+                      '예상 배달 시간 : $deliveryTime 일',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 24,
+                      ),
+                  ),
+                ),
+                SizedBox(height: 25),
                 _buildNextPageButton('택배 보내기'),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildSizedTextField(String hintText, TextEditingController controller) {
-    return SizedBox(
-      width: double.infinity,
-      height: 35,
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-          hintText: hintText,
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.grey[200]!),
-          ),
-        ),
-        keyboardType: TextInputType.number,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       ),
     );
   }
@@ -239,7 +239,7 @@ class _SendingPage2State extends State<SendingPage2> {
       height: 50,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color(0xFFC1004B),
         border: Border.all(color: Colors.grey[300]!, width: 1),
         borderRadius: BorderRadius.circular(10),
       ),
@@ -269,7 +269,7 @@ class _SendingPage2State extends State<SendingPage2> {
         child: Text(
           text,
           style: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontWeight: FontWeight.w600,
           ),
         ),
